@@ -5,9 +5,11 @@ M.connection = nil
 local socket_lib = require("cyrus.socket_lib")
 
 function M.connect()
-	if pcall(socket_lib.connect) then
+	local success, err = pcall(socket_lib.connect)
+	if success then
 		M.connection = socket_lib.connect()
 	end
+	return success, err
 end
 
 return M
