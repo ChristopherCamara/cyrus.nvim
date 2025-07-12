@@ -1,13 +1,19 @@
 local M = {}
 
-local socket = require("cyrus.socket")
+local socket_conn = require("cyrus.socket_conn")
 
 M.check = function()
 	vim.health.start("cyrus report")
-	if socket.connection ~= nil then
-		vim.health.ok("connected to primrose server")
+	local socket = socket_conn.new()
+	if not socket then
+		vim.health.error("Cannot connect to primrose server")
+		return
+	end
+	local ready, message = socket.poll_message()
+	if ready == true then
+		vim.health.ok(message)
 	else
-		vim.health.error("not connected to primrose server")
+		vim.health.error(message)
 	end
 end
 
